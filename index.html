@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mo.k — 모크 노래방</title>
+<meta name="description" content="Mo.k — streams, jeux, liens et contact pro.">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bungee&family=Bungee+Inline&family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   PALETTE  — nuit de Séoul / enseignes / OSD magnétoscope
+   ========================================================= */
+:root{
+  --night:#07040f;
+  --ink:#120a22;
+  --pink:#ff2e88;
+  --cyan:#19e6ff;
+  --osd:#e6e64a;
+  --red:#ff3d5a;
+  --mint:#3dffb0;
+  --paper:#f4ecd8;
+  --muted:#8b7fa8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--night);
+  color:var(--paper);
+  font-family:"Space Mono",monospace;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+
+/* ---------- CRT overlays ---------- */
+.scan,.grain,.vignette{position:fixed;inset:0;pointer-events:none;z-index:50}
+.scan{background:repeating-linear-gradient(to bottom,rgba(0,0,0,.28) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+.vignette{background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.75) 100%)}
+.grain{opacity:.09;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain .5s steps(3) infinite}
+@keyframes grain{0%{transform:translate(0,0)}33%{transform:translate(-8px,5px)}66%{transform:translate(6px,-7px)}}
+
+/* power-on */
+.power{position:fixed;inset:0;background:#000;z-index:100;pointer-events:none;animation:power 1.1s cubic-bezier(.7,0,.3,1) forwards}
+.power::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:#fff;box-shadow:0 0 30px #fff;animation:line 1.1s forwards}
+@keyframes power{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}
+@keyframes line{0%{transform:scaleX(0)}35%{transform:scaleX(1);height:2px}60%{height:100vh;top:0;opacity:.6}100%{opacity:0}}
+
+/* ---------- OSD ---------- */
+.osd{position:fixed;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;z-index:40;
+  font-family:"VT323",monospace;font-size:26px;color:var(--osd);text-shadow:2px 2px 0 #000;letter-spacing:1px;pointer-events:none}
+.osd .rec{color:var(--red)}
+.osd .rec i{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--red);margin-right:8px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- side neon strips (enseignes verticales) ---------- */
+.strip{position:fixed;top:0;bottom:0;width:64px;display:flex;flex-direction:column;justify-content:center;gap:4px;z-index:5;pointer-events:none}
+.strip.l{left:0}.strip.r{right:0}
+.strip span{font-family:"Black Han Sans",sans-serif;font-size:40px;line-height:1.05;text-align:center}
+.strip.l span{color:#ffd9ec;text-shadow:0 0 4px var(--pink),0 0 14px var(--pink),0 0 34px var(--pink)}
+.strip.r span{color:#d6fbff;text-shadow:0 0 4px var(--cyan),0 0 14px var(--cyan),0 0 34px var(--cyan)}
+.strip.r span:nth-child(3){animation:dead 6s infinite}
+@keyframes dead{0%,91%,95%,100%{opacity:1}92%,94%{opacity:.15}}
+
+/* ---------- layout ---------- */
+main{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:110px 88px 60px}
+section{margin-top:110px}
+
+/* ---------- HERO ---------- */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.kicker{font-family:"VT323",monospace;font-size:24px;color:var(--cyan);letter-spacing:3px}
+.kicker b{color:var(--osd);font-weight:400}
+h1{font-family:"Bungee",sans-serif;font-size:clamp(84px,13vw,168px);line-height:.86;margin:14px 0 6px;
+  color:#fff0f7;
+  text-shadow:0 0 2px #fff,0 0 10px var(--pink),0 0 24px var(--pink),0 0 60px var(--pink),0 0 110px rgba(255,46,136,.6);
+  animation:flicker 7s infinite}
+h1 .dot{color:var(--cyan);text-shadow:0 0 10px var(--cyan),0 0 30px var(--cyan),0 0 60px var(--cyan)}
+@keyframes flicker{0%,18%,22%,25%,53%,57%,100%{opacity:1}20%,24%,55%{opacity:.35}}
+.hangul{font-family:"Black Han Sans",sans-serif;font-size:clamp(34px,5vw,54px);color:var(--osd);
+  -webkit-text-stroke:0;text-shadow:3px 3px 0 var(--red),6px 6px 0 #000}
+.bio{margin-top:22px;max-width:430px;font-size:15px;line-height:1.7;color:#d9cfe9}
+.bio mark{background:var(--pink);color:#fff;padding:0 6px}
+
+/* CRT TV */
+.tv{position:relative;aspect-ratio:1/1;max-width:340px;justify-self:center;width:100%}
+.tv-body{position:absolute;inset:0;border-radius:28px;background:linear-gradient(145deg,#2a1f3d,#140c22);
+  border:3px solid #000;box-shadow:10px 10px 0 #000,0 0 0 2px #3c2d57 inset}
+.tv-screen{position:absolute;inset:26px 26px 64px 26px;border-radius:38px/30px;overflow:hidden;
+  background:radial-gradient(circle at 50% 45%,#1d4a7a 0%,#0b1630 70%);border:3px solid #000;box-shadow:inset 0 0 40px rgba(0,0,0,.9)}
+.tv-screen img{position:absolute;left:50%;bottom:-4%;width:92%;transform:translateX(-50%);
+  filter:drop-shadow(-3px 0 0 rgba(255,46,136,.7)) drop-shadow(3px 0 0 rgba(25,230,255,.7));animation:jitter 4s infinite}
+@keyframes jitter{0%,96%,100%{transform:translateX(-50%)}97%{transform:translateX(calc(-50% + 6px)) skewX(4deg)}98%{transform:translateX(calc(-50% - 4px))}}
+.tv-screen::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.06) 0 2px,transparent 2px 4px);
+  animation:roll 6s linear infinite}
+@keyframes roll{from{background-position:0 0}to{background-position:0 120px}}
+.tv-label{position:absolute;left:26px;bottom:20px;font-family:"VT323",monospace;font-size:20px;color:var(--muted)}
+.knobs{position:absolute;right:28px;bottom:18px;display:flex;gap:10px}
+.knobs i{width:24px;height:24px;border-radius:50%;background:#0d0717;border:3px solid #000;box-shadow:inset 2px 2px 0 #3c2d57}
+.tv-osd{position:absolute;top:12px;left:16px;font-family:"VT323",monospace;color:var(--mint);font-size:20px;z-index:2;text-shadow:0 0 6px var(--mint)}
+.sticker{position:absolute;top:-22px;right:-18px;background:var(--osd);color:#000;font-family:"Black Han Sans",sans-serif;
+  font-size:20px;padding:10px 14px;border:3px solid #000;transform:rotate(9deg);box-shadow:4px 4px 0 #000;z-index:3}
+
+/* ---------- ticker ---------- */
+.ticker{position:relative;z-index:10;margin-top:70px;border-top:3px solid #000;border-bottom:3px solid #000;
+  background:var(--pink);transform:rotate(-2deg);overflow:hidden;box-shadow:0 8px 0 #000}
+.ticker-track{display:flex;width:max-content;animation:tick 28s linear infinite}
+.ticker span{font-family:"Bungee",sans-serif;font-size:22px;color:#fff;padding:12px 0;white-space:nowrap}
+.ticker span em{font-style:normal;font-family:"Black Han Sans",sans-serif;color:var(--night);margin:0 22px}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ---------- section headers ---------- */
+.sec-head{display:flex;align-items:flex-end;gap:18px;margin-bottom:28px;flex-wrap:wrap}
+.sec-num{font-family:"Bungee Inline",sans-serif;font-size:64px;line-height:.8;color:var(--cyan);text-shadow:0 0 18px rgba(25,230,255,.6)}
+.sec-title{font-family:"Black Han Sans",sans-serif;font-size:42px;line-height:1}
+.sec-title small{display:block;font-family:"VT323",monospace;font-size:22px;color:var(--muted);letter-spacing:2px}
+
+/* ---------- LINKS = karaoke songbook ---------- */
+.songbook{border:3px solid #000;background:#0f0a1c;box-shadow:10px 10px 0 var(--pink)}
+.songbook-head,.song{display:grid;grid-template-columns:110px 1fr 1fr 120px;align-items:center}
+.songbook-head{background:var(--osd);color:#000;font-family:"VT323",monospace;font-size:20px;letter-spacing:2px;border-bottom:3px solid #000}
+.songbook-head div{padding:8px 16px}
+.song{border-bottom:2px dashed #2b2142;position:relative;transition:background .12s}
+.song:last-child{border-bottom:0}
+.song>div{padding:18px 16px}
+.song .no{font-family:"VT323",monospace;font-size:30px;color:var(--cyan)}
+.song .ttl{font-family:"Bungee",sans-serif;font-size:22px}
+.song .ttl small{display:block;font-family:"Black Han Sans",sans-serif;font-size:14px;color:var(--muted);letter-spacing:1px}
+.song .handle{color:#cfc4e4;font-size:14px}
+.song .go{justify-self:end;margin-right:16px;font-family:"VT323",monospace;font-size:22px;border:2px solid var(--paper);padding:4px 12px}
+.song:hover,.song:focus-visible{background:var(--pink);outline:none}
+.song:hover .no,.song:focus-visible .no{color:#fff;animation:blink .5s steps(1) infinite}
+.song:hover .ttl small,.song:hover .handle{color:#fff}
+.song:hover .go{background:#fff;color:var(--pink);border-color:#fff}
+.song:hover::before{content:"▶";position:absolute;left:-30px;top:50%;transform:translateY(-50%);color:var(--osd);font-size:22px}
+
+/* ---------- GAMES = cassettes ---------- */
+.tapes{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:34px}
+.tape{display:block;position:relative;background:var(--c,#222);border:3px solid #000;border-radius:12px;padding:16px 16px 18px;
+  box-shadow:8px 8px 0 #000;transition:transform .18s,box-shadow .18s}
+.tape:nth-child(odd){transform:rotate(-1.5deg)}.tape:nth-child(even){transform:rotate(1.2deg)}
+.tape:hover{transform:rotate(0) translate(-4px,-6px);box-shadow:14px 14px 0 #000}
+.tape-label{background:var(--paper);color:#111;border:3px solid #000;border-radius:6px;padding:10px 12px 12px;position:relative}
+.tape-label::before{content:"";position:absolute;left:0;right:0;top:34px;height:8px;background:repeating-linear-gradient(90deg,var(--c) 0 20px,#000 20px 24px)}
+.tape-side{font-family:"VT323",monospace;font-size:18px;display:flex;justify-content:space-between}
+.tape-title{font-family:"Bungee",sans-serif;font-size:21px;margin-top:20px;line-height:1.05}
+.tape-desc{font-size:12.5px;line-height:1.5;margin-top:8px;color:#333}
+.reels{display:flex;justify-content:center;gap:52px;margin:14px 0 6px}
+.reel{width:46px;height:46px;border-radius:50%;background:#111;border:3px solid #000;position:relative;
+  background-image:repeating-conic-gradient(#111 0 30deg,#2c2c2c 30deg 60deg)}
+.reel::after{content:"";position:absolute;inset:13px;border-radius:50%;background:var(--paper);border:2px solid #000}
+.tape:hover .reel{animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tape-foot{display:flex;justify-content:space-between;align-items:center;font-family:"VT323",monospace;font-size:20px;color:#000}
+.tape-foot b{background:#000;color:var(--osd);padding:2px 10px;font-weight:400}
+
+/* ---------- CONTACT = ticket ---------- */
+.ticket{display:grid;grid-template-columns:1fr 190px;background:var(--paper);color:#111;border:3px solid #000;box-shadow:10px 10px 0 var(--cyan);position:relative}
+.ticket-main{padding:30px 32px;border-right:3px dashed #111}
+.ticket-main .lbl{font-family:"VT323",monospace;font-size:20px;letter-spacing:2px;color:#6b5f86}
+.ticket-main .mail{font-family:"Bungee",sans-serif;font-size:clamp(18px,3.2vw,30px);word-break:break-all;margin:8px 0 18px}
+.ticket-main p{font-size:14px;line-height:1.6;max-width:440px}
+.btns{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+.btn{font-family:"VT323",monospace;font-size:22px;padding:8px 18px;border:3px solid #000;cursor:pointer;background:var(--pink);color:#fff;box-shadow:4px 4px 0 #000;transition:transform .1s,box-shadow .1s}
+.btn.alt{background:#fff;color:#000}
+.btn:active{transform:translate(4px,4px);box-shadow:0 0 0 #000}
+.ticket-stub{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;background:var(--osd)}
+.ticket-stub .big{font-family:"Black Han Sans",sans-serif;font-size:44px;line-height:1}
+.ticket-stub .sm{font-family:"VT323",monospace;font-size:18px;text-align:center}
+.barcode{width:120px;height:44px;background:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 4px,#000 4px 7px,transparent 7px 9px,#000 9px 10px,transparent 10px 13px)}
+.ticket::before,.ticket::after{content:"";position:absolute;right:178px;width:24px;height:24px;border-radius:50%;background:var(--night);border:3px solid #000}
+.ticket::before{top:-14px}.ticket::after{bottom:-14px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,120px);background:var(--mint);color:#000;border:3px solid #000;
+  font-family:"Black Han Sans",sans-serif;font-size:20px;padding:12px 22px;box-shadow:6px 6px 0 #000;z-index:60;transition:transform .25s,opacity .25s;opacity:0;visibility:hidden}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+
+/* ---------- footer ---------- */
+footer{position:relative;z-index:10;text-align:center;padding:80px 20px 60px}
+.open{display:inline-block;font-family:"Black Han Sans",sans-serif;font-size:58px;color:#eafff6;padding:6px 26px;border:4px solid var(--mint);border-radius:14px;
+  text-shadow:0 0 8px var(--mint),0 0 26px var(--mint);box-shadow:0 0 14px var(--mint),inset 0 0 14px var(--mint);animation:flicker 9s infinite 2s}
+footer p{font-family:"VT323",monospace;font-size:22px;color:var(--muted);margin-top:22px;letter-spacing:2px}
+footer p span{color:var(--osd);animation:blink 1.2s steps(1) infinite}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .strip{display:none}
+  main{padding:90px 20px 40px}
+  .hero{grid-template-columns:1fr}
+  .tv{max-width:280px;margin-top:20px}
+  .songbook-head{display:none}
+  .song{grid-template-columns:96px 1fr auto}
+  .songbook{box-shadow:6px 6px 0 var(--pink)}
+  .osd .ch{display:none}
+  .song .handle{display:none}
+  .song .no{font-size:22px}
+  .song .ttl{font-size:18px}
+  .song:hover::before{display:none}
+  .ticket{grid-template-columns:1fr}
+  .ticket-main{border-right:0;border-bottom:3px dashed #111}
+  .ticket::before,.ticket::after{display:none}
+  .osd{font-size:20px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.power{display:none}}
+</style>
+</head>
+<body>
+
+<!--
+  ================================================================
+  ✏️  POUR MODIFIER TES INFOS : descends jusqu'à "CONFIG" dans le
+      <script> en bas du fichier. Tout le reste se met à jour seul.
+  ================================================================
+-->
+
+<div class="power"></div>
+<div class="scan"></div><div class="grain"></div><div class="vignette"></div>
+
+<div class="osd" aria-hidden="true">
+  <div>▶ PLAY &nbsp;<span class="ch">CH-03 &nbsp;</span><span id="clock">--:--:--</span></div>
+  <div class="rec"><i></i>REC</div>
+</div>
+
+<div class="strip l" aria-hidden="true"><span>노</span><span>래</span><span>방</span></div>
+<div class="strip r" aria-hidden="true"><span>게</span><span>임</span><span>중</span></div>
+
+<main>
+  <!-- HERO -->
+  <header class="hero">
+    <div>
+      <div class="kicker">SEOUL·NIGHT // <b>EXT3</b> // EST. 2026</div>
+      <h1 id="name">MO<span class="dot">.</span>K</h1>
+      <div class="hangul" id="hangulName">모크 노래방</div>
+      <p class="bio" id="bio"></p>
+    </div>
+    <div class="tv">
+      <div class="sticker">구독 ♥</div>
+      <div class="tv-body"></div>
+      <div class="tv-screen">
+        <div class="tv-osd">CH 03 ●LIVE</div>
+        <img src="assets/mok.png" alt="Mo.k, la mascotte : un singe bleu aux yeux en dollars">
+      </div>
+      <div class="tv-label">MO.K-TRON 9000</div>
+      <div class="knobs"><i></i><i></i></div>
+    </div>
+  </header>
+</main>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
+
+<main style="padding-top:0">
+  <!-- LINKS -->
+  <section id="links">
+    <div class="sec-head">
+      <div class="sec-num">01</div>
+      <div class="sec-title">선곡표<small>CHOISIS TA CHAÎNE — LIENS</small></div>
+    </div>
+    <div class="songbook" role="list">
+      <div class="songbook-head" aria-hidden="true"><div>NO.</div><div>TITRE</div><div>ARTISTE</div><div></div></div>
+      <div id="songs"></div>
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section id="games">
+    <div class="sec-head">
+      <div class="sec-num">02</div>
+      <div class="sec-title">게임 테이프<small>LES JEUX QUE J'AI FAITS</small></div>
+    </div>
+    <div class="tapes" id="tapes"></div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <div class="sec-title">비즈니스<small>CONTACT PRO</small></div>
+    </div>
+    <div class="ticket">
+      <div class="ticket-main">
+        <div class="lbl">ADMIT ONE · COLLAB / SPONSO / PRESSE</div>
+        <div class="mail" id="mail"></div>
+        <p id="proText"></p>
+        <div class="btns">
+          <button class="btn" id="copyBtn">COPIER L'ADRESSE</button>
+          <a class="btn alt" id="mailBtn">ÉCRIRE ▶</a>
+        </div>
+      </div>
+      <div class="ticket-stub">
+        <div class="big">입장권</div>
+        <div class="barcode"></div>
+        <div class="sm">N° 000193<br>VALABLE 24/7</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="open">영업중</div>
+  <p>OUVERT 24H/24 · INSERT COIN <span>▮</span></p>
+  <p style="font-size:18px;margin-top:8px">© <span style="animation:none;color:var(--muted)" id="year"></span> MO.K — FAIT MAIN, SANS TEMPLATE</p>
+</footer>
+
+<div class="toast" id="toast">복사 완료! ADRESSE COPIÉE</div>
+
+<script>
+/* =================================================================
+   CONFIG — remplace les valeurs entre guillemets par les tiennes
+   ================================================================= */
+const CONFIG = {
+  bio: "Streamer, créateur de jeux et <mark>singe bleu professionnel</mark>. Lives chaotiques, jeux faits maison, et beaucoup trop de bananes.",
+  email: "contact@exemple.com",
+  proText: "Pour les collabs, sponsos, tests de jeux ou la presse : un mail, et je réponds sous 48 h.",
+  ticker: ["NOW LIVE", "지금 방송 중", "NOUVEAU JEU BIENTÔT", "새 게임", "REJOINS LE DISCORD", "디스코드", "GG WP", "감사합니다"],
+
+  // Tes réseaux : supprime ou ajoute des lignes librement
+  links: [
+    { name: "Twitch",    kr: "트위치",   handle: "@mok",          url: "https://twitch.tv/" },
+    { name: "YouTube",   kr: "유튜브",   handle: "@mok",          url: "https://youtube.com/" },
+    { name: "TikTok",    kr: "틱톡",     handle: "@mok",          url: "https://tiktok.com/" },
+    { name: "Instagram", kr: "인스타",   handle: "@mok",          url: "https://instagram.com/" },
+    { name: "Discord",   kr: "디스코드", handle: "Le serveur",    url: "https://discord.gg/" },
+    { name: "X",         kr: "엑스",     handle: "@mok",          url: "https://x.com/" }
+  ],
+
+  // Tes jeux : color = couleur de la cassette
+  games: [
+    { title: "Nom du jeu 1", desc: "Une phrase qui donne envie d'y jouer.", tag: "ARCADE", year: "2026", color: "#ff2e88", url: "#" },
+    { title: "Nom du jeu 2", desc: "Une phrase qui donne envie d'y jouer.", tag: "IDLE",   year: "2026", color: "#19e6ff", url: "#" },
+    { title: "Nom du jeu 3", desc: "Une phrase qui donne envie d'y jouer.", tag: "PUZZLE", year: "2025", color: "#e6e64a", url: "#" }
+  ]
+};
+/* ================================================================= */
+
+document.getElementById('bio').innerHTML = CONFIG.bio;
+document.getElementById('mail').textContent = CONFIG.email;
+document.getElementById('proText').textContent = CONFIG.proText;
+document.getElementById('mailBtn').href = 'mailto:' + CONFIG.email;
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// ticker (doublé pour la boucle)
+const t = CONFIG.ticker.map(w => `${w}<em>✦</em>`).join('');
+document.getElementById('ticker').innerHTML = `<span>${t}</span><span>${t}</span>`;
+
+// songbook
+const pad = n => String(n).padStart(5, '0');
+document.getElementById('songs').innerHTML = CONFIG.links.map((l, i) => `
+  <a class="song" role="listitem" href="${l.url}" target="_blank" rel="noopener">
+    <div class="no">${pad(19300 + i * 7 + 3)}</div>
+    <div class="ttl">${l.name}<small>${l.kr}</small></div>
+    <div class="handle">${l.handle}</div>
+    <div class="go">예약 ▶</div>
+  </a>`).join('');
+
+// tapes
+document.getElementById('tapes').innerHTML = CONFIG.games.map((g, i) => `
+  <a class="tape" style="--c:${g.color}" href="${g.url}" target="_blank" rel="noopener">
+    <div class="tape-label">
+      <div class="tape-side"><span>SIDE ${String.fromCharCode(65 + i)}</span><span>${g.year}</span></div>
+      <div class="tape-title">${g.title}</div>
+      <div class="tape-desc">${g.desc}</div>
+    </div>
+    <div class="reels"><div class="reel"></div><div class="reel"></div></div>
+    <div class="tape-foot"><b>${g.tag}</b><span>PLAY ▶</span></div>
+  </a>`).join('');
+
+// horloge OSD
+const clock = document.getElementById('clock');
+const tickClock = () => {
+  const d = new Date(), h = d.getHours();
+  clock.textContent = (h < 12 ? 'AM ' : 'PM ') + [h % 12 || 12, d.getMinutes(), d.getSeconds()].map(x => String(x).padStart(2, '0')).join(':');
+};
+tickClock(); setInterval(tickClock, 1000);
+
+// copier le mail
+const toast = document.getElementById('toast');
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(CONFIG.email); }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = CONFIG.email; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+  }
+  toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 1800);
+});
+</script>
+</body>
+</html>
