@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mo.k — 모크 노래방</title>
 <meta name="description" content="Mo.k — streams, jeux, liens et contact pro.">
-<link rel="icon" href="assets/favicon.png">
+<link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bungee&family=Bungee+Inline&family=VT323&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -238,7 +238,7 @@ footer p span{color:var(--osd);animation:blink 1.2s steps(1) infinite}
       <div class="tv-body"></div>
       <div class="tv-screen">
         <div class="tv-osd">CH 03 ●LIVE</div>
-        <img src="assets/mok.png" alt="Mo.k, la mascotte : un singe bleu aux yeux en dollars">
+        <img src="mok.png" alt="Mo.k, la mascotte : un singe bleu un peu trop présent">
       </div>
       <div class="tv-label">MO.K-TRON 9000</div>
       <div class="knobs"><i></i><i></i></div>
@@ -265,7 +265,7 @@ footer p span{color:var(--osd);animation:blink 1.2s steps(1) infinite}
   <section id="games">
     <div class="sec-head">
       <div class="sec-num">02</div>
-      <div class="sec-title">게임 테이프<small>LES JEUX QUE J'AI FAITS</small></div>
+      <div class="sec-title">게임 테이프<small>LES DERNIERS JEUX QUE J'AI FAITS</small></div>
     </div>
     <div class="tapes" id="tapes"></div>
   </section>
@@ -308,26 +308,24 @@ footer p span{color:var(--osd);animation:blink 1.2s steps(1) infinite}
    CONFIG — remplace les valeurs entre guillemets par les tiennes
    ================================================================= */
 const CONFIG = {
-  bio: "Streamer, créateur de jeux et <mark>singe bleu professionnel</mark>. Lives chaotiques, jeux faits maison, et beaucoup trop de bananes.",
-  email: "contact@exemple.com",
+  bio: "Streamer, gamer et <mark>singe bleu professionnel</mark>. Lives chaotiques, 100% naturel, et beaucoup trop de rire.",
+  email: "monktic.pltr@gmail.com",
   proText: "Pour les collabs, sponsos, tests de jeux ou la presse : un mail, et je réponds sous 48 h.",
   ticker: ["NOW LIVE", "지금 방송 중", "NOUVEAU JEU BIENTÔT", "새 게임", "REJOINS LE DISCORD", "디스코드", "GG WP", "감사합니다"],
 
   // Tes réseaux : supprime ou ajoute des lignes librement
   links: [
-    { name: "Twitch",    kr: "트위치",   handle: "@mok",          url: "https://twitch.tv/" },
-    { name: "YouTube",   kr: "유튜브",   handle: "@mok",          url: "https://youtube.com/" },
-    { name: "TikTok",    kr: "틱톡",     handle: "@mok",          url: "https://tiktok.com/" },
-    { name: "Instagram", kr: "인스타",   handle: "@mok",          url: "https://instagram.com/" },
-    { name: "Discord",   kr: "디스코드", handle: "Le serveur",    url: "https://discord.gg/" },
-    { name: "X",         kr: "엑스",     handle: "@mok",          url: "https://x.com/" }
+    { name: "Twitch",    kr: "트위치",   handle: "@mok",          url: "https://www.twitch.tv/monktic" },
+    { name: "YouTube",   kr: "유튜브",   handle: "@mok",          url: "https://www.youtube.com/@monktic-pltr" },
+    { name: "TikTok",    kr: "틱톡",     handle: "@mok",          url: "https://www.tiktok.com/@monktic" },
+    { name: "Instagram", kr: "인스타",   handle: "@mok",          url: "https://www.instagram.com/monktic.pltr/" }
   ],
 
   // Tes jeux : color = couleur de la cassette
   games: [
-    { title: "Nom du jeu 1", desc: "Une phrase qui donne envie d'y jouer.", tag: "ARCADE", year: "2026", color: "#ff2e88", url: "#" },
-    { title: "Nom du jeu 2", desc: "Une phrase qui donne envie d'y jouer.", tag: "IDLE",   year: "2026", color: "#19e6ff", url: "#" },
-    { title: "Nom du jeu 3", desc: "Une phrase qui donne envie d'y jouer.", tag: "PUZZLE", year: "2025", color: "#e6e64a", url: "#" }
+    { title: "DEADLOCK", desc: "NEED HELP ON BLUE LANE", tag: "MOBA & TPS", year: "2026", color: "#ff2e88", url: "#" },
+    { title: "CRACK THE PACK", desc: "Vive la dopamine", tag: "ORIGINAL",   year: "2026", color: "#19e6ff", url: "#" },
+    { title: "MOON SWEEPER", desc: "J'ai trop nettoye la lune", tag: "PUZZLE", year: "2025", color: "#e6e64a", url: "#" }
   ]
 };
 /* ================================================================= */
